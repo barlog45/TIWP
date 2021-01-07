@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aplikacja do nauki języka angielskiego</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <style>
+
+    body { 
+        max-width: 400px;
+        margin: auto; 
+        margin-top: 50px;
+        font-family: Verdana;
+        padding: 10px;
+        border: 1px solid;
+        border-radius: 10px;
+    }
+
+  </style>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+    $(function () {
+        var score = localStorage.getItem('score');
+        
+            $("h3").text("Twój ostatni wynik testu to: "+score+" pkt");
+        
+    });
+
+  </script>
+</head>
+<body>
+<h3></h3>
+<h4>Każdy punkt oznacza jedno poprawnie napisane słowo</h4>
+ 
+ 
+</body>
+</html>

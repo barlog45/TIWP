@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aplikacja do nauki języka angielskiego</title>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<style>
+
+    body { 
+        max-width: 450px;
+        margin: auto; 
+        margin-top: 50px;
+        font-family: Verdana;
+        padding: 10px;
+        border: 1px solid;
+        border-radius: 10px;
+    }
+    fieldset {
+      border: 0;
+    }
+    label {
+      display: block;
+      margin: 20px 0 0 0;
+    }
+    .overflow {
+      height: 200px;
+    }
+    input, button { padding: .5em 1em; text-decoration: none; margin: 20px 0 0 15px; }
+
+  </style>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    $( "#lang" ).selectmenu();
+    $( "#mode" ).selectmenu();
+
+    $( "#button" ).click(function() {
+
+        if($("#mode").val()==="Nauka"){
+            localStorage.setItem("mode", "Nauka" );
+            $('form[name=choose]').attr('action','quiz.html');           
+        }else{
+            var lang = $("#lang").val();
+            localStorage.setItem("mode", "Test" );
+            localStorage.setItem("lang", lang );
+            $('form[name=choose]').attr('action','quiz.html');
+        }
+    });
+
+
+    $( "#test" ).click(function() {
+        $('form[name=choose]').attr('action','test.html');
+    });
+
+    
+    $("#dialog").dialog({
+      autoOpen : false, modal : true, show : "explode", hide : "explode",
+    });
+
+    $("#aboutButton").click(function() {
+      $("#dialog").dialog("open");
+      return false;
+    });
+  
+  });
+
+</script>
+</head>
+<body>
+ <h2>Aplikacja do nauki angielskiego</h2>
+<div class="demo">
+ 
+<form name="choose">
+ 
+    <fieldset>
+        <label for="lang">Wybierz język:</label>
+        <select name="lang" id="lang">
+            <option selected="selected">Polski</option>
+            <option>Angielski</option>
+    </select>
+
+        <label for="mode">Wybierz tryb:</label>
+        <select name="mode" id="mode">
+            <option selected="selected">Nauka</option>
+            <option>Test</option>
+    </select>
+</fieldset>
+<input type="submit" value="Start" id="button"></input><input type="submit" value="Wyniki" id="test"></input>
+
+</form>
+</div>
+
+<button id="aboutButton">O aplikacji</button>
+<div id="dialog" title="O aplikacji"><p>Autor aplikacji: Piotr Konieczny</p></div>
+ 
+</body>
+</html>

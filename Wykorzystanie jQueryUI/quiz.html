@@ -1,0 +1,204 @@
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Aplikacja do nauki języka angielskiego</title>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<style>
+		body { max-width: 500px;
+		padding-left: 150px;
+		margin: auto;
+		margin-top: 50px;
+		max-height: 300px;
+		font-family: Verdana;
+		padding: 10px;
+        border: 1px solid;
+        border-radius: 10px;
+		}
+		.toggler { width: 500px; height: 200px; }
+		button { padding: .5em 1em; text-decoration: none; }
+		#effect { width: 240px; height: 170px; padding: 0.4em; position: relative; }
+		#effect h3 { margin: 0; padding: 0.4em; text-align: center; }
+	</style>
+	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script>
+		var text1 ="";
+		var score = 0;
+		var roll = 0;
+		var start = 0;
+		var rightAnswer ="";
+		var wordsPl = ["wiosna", "lato", "jesień", "zima", "biały", "czerwony", "niebieski", "zielony", "wołowina", "wieprzowina", "boczek"];
+		var wordsEn = ["spring", "summer", "autumn", "winter", "white", "red", "blue", "green", "beef", "pork", "bacon"];
+		var lang = localStorage.getItem('lang');
+		var mode = localStorage.getItem('mode');
+
+	$( function() {
+
+	function runEffect() {
+
+		var selectedEffect = "drop";
+
+		var options = {};
+
+		if ( selectedEffect === "scale" ) {
+		options = { percent: 50 };
+		} else if ( selectedEffect === "size" ) {
+		options = { to: { width: 280, height: 185 } };
+		}
+
+		$( "#effect" ).show( selectedEffect, options, 200);
+	};
+
+	$( "#backButton" ).on( "click", function() {
+		callback();
+	}); 
+
+	function callback() {
+		
+
+		$( "#effect:visible" ).removeAttr( "style" ).fadeOut(25);
+		
+	};
+
+	function askque(){
+		if(wordsPl.length!=0){
+			if(mode == "Nauka"){
+				if(lang=="Angielski"){
+					$("h3").text("Tłumaczenie: ");
+					$("#question").text("Tłumaczenie z języka angielskiego na polski: ");
+					$("#buttonText").text('Następne słowo');
+					$("#answer").hide();
+					roll = Math.floor(Math.random()*wordsPl.length);
+					text1+=wordsEn[roll];
+					text1+=" - ";
+					text1+=wordsPl[roll]
+					$("p").text(text1);
+					text1="";
+				}else{
+					$("h3").text("Tłumaczenie: ");
+					$("#question").text("Tłumaczenie z języka polskiego na angielski: ");
+					$("#buttonText").text('Następne słowo');
+					$("#answer").hide();
+					roll = Math.floor(Math.random()*wordsPl.length);
+					text1+=wordsPl[roll];
+					text1+=" - ";
+					text1+=wordsEn[roll]
+					$("p").text(text1);
+					text1="";
+				}
+				wordsPl.splice(roll, 1);
+				wordsEn.splice(roll, 1);
+
+				callback();
+				runEffect();
+			}else if(lang =="Polski"){
+				$("#question").text("Przetłumacz na język angielski słowo: ");
+				if($("#answer").val()===rightAnswer && start==1){
+					score++;
+					$("#odp").text("Twoja ostatnia odpowiedź była poprawna. Twoje punkty: "+score);
+				}else if(start==1){
+					$("#odp").text("Twoja ostatnia odpowiedź była niepoprawna. Twoje punkty: "+score);
+				}
+				
+				localStorage.setItem("score", score );
+				start = 1;
+				roll = Math.floor(Math.random()*wordsPl.length);
+				$("p").text(wordsPl[roll]);
+				rightAnswer = wordsEn[roll];
+
+				wordsPl.splice(roll, 1);
+				wordsEn.splice(roll, 1);
+				
+				callback();
+				runEffect();
+			}else{
+				$("#question").text("Przetłumacz na język polski słowo: ");
+				if($("#answer").val()===rightAnswer && start==1){
+					score++;
+					$("#odp").text("Twoja ostatnia odpowiedź była poprawna. Twoje punkty: "+score);
+				}else if(start==1){
+					$("#odp").text("Twoja ostatnia odpowiedź była niepoprawna. Twoje punkty: "+score);
+				}
+				
+				localStorage.setItem("score", score );
+				start = 1;
+				roll = Math.floor(Math.random()*wordsPl.length);
+				$("p").text(wordsEn[roll]);
+				rightAnswer = wordsPl[roll];
+
+				wordsPl.splice(roll, 1);
+				wordsEn.splice(roll, 1);
+				
+				callback();
+				runEffect();
+			}
+		}else{
+			if(mode != "Nauka"){
+				if($("#answer").val()===rightAnswer && start==1){
+						score++;
+						$("#odp").text("Twoja ostatnia odpowiedź była poprawna. Twoje punkty: "+score);
+					}else if(start==1){
+						$("#odp").text("Twoja ostatnia odpowiedź była niepoprawna. Twoje punkty: "+score);
+				}
+				localStorage.setItem("score", score );
+				$("#odp").text("Koniec pytań. Twoje punkty: "+score);
+			}
+			alert("koniec pytań!");
+		}
+	}
+
+	$( "#nextButton" ).on( "click", function() {
+		if(mode != "Nauka"){
+			if($("#answer").val()!==""){
+				askque();
+				$("#answer").val("");
+			}else if(wordsPl.length!=0){
+				alert("Wypełnij pole na odpowiedź!");
+			}else{
+				askque();
+			}
+		}else{
+			askque();
+		}		
+	});
+
+	$( "#test" ).on( "click", function() {
+		location.replace("test.html");	
+	});
+
+	$( "#effect" ).hide();
+	
+	$(window).on("beforeunload", function() {
+    $.ajax("", {
+        async: false,
+        data: "test",
+        success: function(event) {
+        }
+    });
+    
+    return 0;
+    });
+
+	askque();
+});
+
+	</script>
+</head>
+<body>
+ 
+	<div class="toggler">
+	  <div id="effect" class="ui-widget-content ui-corner-all">
+		<h3 id="questionTitle" class="ui-widget-header ui-corner-all">Pytanie</h3>
+		<br><span id="question"></span>
+		<p></p>
+		<input id = "answer" type="text" />
+	  </div>
+	  <br><br><br><span id="odp"></span>
+	</div>
+	
+	<button id="nextButton" class="ui-state-default ui-corner-all"><span id="buttonText">Zatwierdź odpowiedź i następne pytanie</span></button>
+	<button id="test" class="ui-state-default ui-corner-all" >Wyniki</button>
+
+	</body>
+</html>
